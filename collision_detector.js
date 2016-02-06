@@ -17,7 +17,6 @@ engine.collider = (function (){
     collidees.forEach(function ( collidee) {
       if ( collidee.collision_type === engine.configMap.elastic ) {
         if ( collide_rect( collider, collidee ) ) {
-          console.log('push!');
           colliders.push(collidee);
         }
       }

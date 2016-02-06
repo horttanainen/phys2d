@@ -47,8 +47,8 @@
       requestAnimationFrame( mainLoop );
     }
 
-    document.addEventListener( 'mousedown', engine.map_creator.onMouseDown, false );
-    document.addEventListener( 'mouseup', engine.map_creator.onMouseUp, false );
+    canvas.addEventListener( 'mousedown', engine.map_creator.onMouseDown, false );
+    canvas.addEventListener( 'mouseup', engine.map_creator.onMouseUp, false );
 
     elapsed = Date.now();
     mainLoop();

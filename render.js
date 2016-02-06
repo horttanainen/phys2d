@@ -25,7 +25,6 @@ engine.render = (function () {
     loop.entities.forEach( function ( entity ){
       draw( entity );
     });
-
   }
 
   function init( arg_map ) {

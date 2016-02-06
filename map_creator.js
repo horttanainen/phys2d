@@ -1,13 +1,29 @@
 /*global engine, prompt */
 engine.map_creator =(function (){
-  var block, canvas, loop;
+  var block, canvas, loop, clickedElement;
 
-  function addToEngine( block ) {
+  function addToLoop( block ) {
     loop.entities.push( block );
-    if ( block.player ) {
-      loop.player = block;
-    } else {
-      loop.collidables.push( block );
+    loop.collidables.push( block );
+    block = undefined;
+  }
+
+  function checkIfElementClicked( x, y, callback ) {
+    var counter = 0;
+    loop.entities.forEach( function( entity ) {
+      if (entity.start.x < x &&
+          entity.start.x + entity.width > x &&
+          entity.start.y < y &&
+          entity.start.y + entity.height > y ) {
+        clickedElement = entity;
+      }
+      counter++;
+    });
+
+    if ( counter === loop.entities.length ) {
+      if ( ! clickedElement ) {
+        callback( x, y );
+      }
     }
   }
 
@@ -16,25 +32,29 @@ engine.map_creator =(function (){
       start_x = event.clientX - canvas.offsetLeft,
       start_y = event.clientY - canvas.offsetTop;
 
-    block = engine.entity.rectangle({ x : start_x, y : start_y });
+    checkIfElementClicked( start_x, start_y,
+      function ( start_x, start_y ){
+        block = engine.entity.rectangle({ x : start_x, y : start_y });
+      });
   }
 
   function onMouseUp( event ) {
     var
       stop_x = event.clientX - canvas.offsetLeft,
-      stop_y = event.clientY - canvas.offsetTop,
-      response,
-      message;
+      stop_y = event.clientY - canvas.offsetTop;
 
-    block.width = stop_x - block.start.x;
-    block.height = stop_y - block.start.y;
-
-    message = JSON.stringify( block );
-    response =  prompt( message, message );
-
-    block = engine.entity.rectangle( JSON.parse( response ) );
-
-    addToEngine( block );
+    if ( clickedElement ) {
+      loop.collidables.splice(loop.collidables.indexOf( clickedElement ), 1);
+      loop.player = clickedElement;
+      clickedElement.color = 'red';
+      clickedElement.type = 'dynamic';
+      clickedElement = undefined;
+    }
+    else {
+      block.width = stop_x - block.start.x;
+      block.height = stop_y - block.start.y;
+      addToLoop( block );
+    }
   }
 
   function init( arg_map ) {

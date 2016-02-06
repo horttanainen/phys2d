@@ -28,9 +28,8 @@ engine.entity = (function () {
     entity.start = start;
     entity.movement = movement;
     entity.color  = arg_map.color || engine.configMap.default_color;
-    entity.player = arg_map.player || false;
     // type, collision_type privateiksi ja niille getterit
-    entity.type = arg_map.type || engine.configMap.dynamic;
+    entity.type = arg_map.type || engine.configMap.kinematic;
     entity.collision_type = arg_map.collision_type || engine.configMap.elastic;
 
     collision_type = collisionTypes[ entity.collision_type ];
