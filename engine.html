@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>engine</title>
+  <style type="text/css">
+  * { 
+    padding : 0;
+    margin  : 0;
+  }
+  canvas {
+    background : #eee;
+    display    : block;
+    margin     : 0 auto; 
+  }
+  </style>
+  <script src="./configure.js"          ></script>
+  <script src="./physics_entity.js"     ></script>
+  <script src="./collision_detector.js" ></script>
+  <script src="./collision_solver.js"   ></script>
+  <script src="./loop.js"               ></script>
+  <script src="./render.js"             ></script>
+  <script src="./map_creator.js"       ></script>
+</head>
+<body>
+
+<canvas id="myCanvas" width="640" height="480"></canvas>
+
+<script type="text/javascript" charset="utf-8">
+    var canvas = document.getElementById('myCanvas'),
+      ctx = canvas.getContext('2d'),
+      elapsed;
+
+    var loop = engine.loop.createLoop();
+    engine.render.init({ loop : loop, context : ctx });
+    engine.map_creator.init({ loop : loop, canvas : canvas });
+
+    var clearCanvas = function () {
+      ctx.clearRect( 0, 0, canvas.width, canvas.height );
+    }
+
+    function mainLoop() {
+      clearCanvas();
+      loop.step(Date.now() - elapsed);
+      elapsed = Date.now();
+      engine.render.all();
+      requestAnimationFrame( mainLoop );
+    }
+
+    document.addEventListener( 'mousedown', engine.map_creator.onMouseDown, false );
+    document.addEventListener( 'mouseup', engine.map_creator.onMouseUp, false );
+
+    elapsed = Date.now();
+    mainLoop();
+</script>
+  
+</body>
+</html>
